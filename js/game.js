@@ -1,6 +1,6 @@
 let canvas;
 let ctx;
-let character = new MovableObject();
+let world = new World();
 
 
 
@@ -9,5 +9,5 @@ function init() {
     ctx = canvas.getContext('2d');
     
 
-    console.log('My character is', character);
+    console.log('My character is', world.character);
 }

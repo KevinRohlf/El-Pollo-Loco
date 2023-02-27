@@ -1,13 +1,6 @@
-class Character {
-    x;
-    y;
-
-
-    moveright() {
-
-    }
+class Character extends MovableObject {
 
     jump() {
-        
+
     }
 }
