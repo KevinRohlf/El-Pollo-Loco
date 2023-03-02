@@ -11,7 +11,7 @@ class World {
         this.canvas = canvas;
         this.keyboard = keyboard;
         this.draw();
-        this.setWorld();        
+        this.setWorld();     
     }
 
     setWorld() {
@@ -29,7 +29,6 @@ class World {
         this.addObjectsToMap(this.level.enemies)
 
         this.ctx.translate(-this.camera_x, 0)
-        
 
         // draw() wird immer wieder aufgerufen
         self = this;
