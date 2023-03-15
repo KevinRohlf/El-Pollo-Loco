@@ -5,6 +5,9 @@ class World {
     ctx;
     keyboard;
     camera_x = 0;
+    statusBar = new StatusBar();
+    statusBarCoin = new StatusBarCoin();
+    statusBarBottle = new StatusBarBottle();
 
     constructor(canvas, keyboard) {
         this.ctx = canvas.getContext('2d');
@@ -24,6 +27,7 @@ class World {
             this.level.enemies.forEach((enemy) => {
                 if( this.character.isColliding(enemy) ) {
                     this.character.hit();
+                    this.statusBar.setPercentage(this.character.energy, this.statusBar.Images_Health)
                 }
             });
         }, 200);
@@ -37,11 +41,13 @@ class World {
 
         this.addObjectsToMap(this.level.backgroundObjects);
         this.addObjectsToMap(this.level.clouds)
-        this.adddToMap(this.character)
+        this.addToMap(this.character)
         this.addObjectsToMap(this.level.enemies)
-
         this.ctx.translate(-this.camera_x, 0)
-
+        //------fixed objects------
+        this.addToMap(this.statusBar);
+        this.addToMap(this.statusBarCoin);
+        this.addToMap(this.statusBarBottle)
         // draw() wird immer wieder aufgerufen
         self = this;
         requestAnimationFrame(function () {
@@ -51,11 +57,11 @@ class World {
 
     addObjectsToMap(objects) {
         objects.forEach(o => {
-            this.adddToMap(o);
+            this.addToMap(o);
         });
     }
 
-    adddToMap(mo) {
+    addToMap(mo) {
         if (mo.otherDirection) {
             this.flipImage(mo);
         }
