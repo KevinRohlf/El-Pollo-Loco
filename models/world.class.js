@@ -28,8 +28,18 @@ class World {
                 if( this.character.isColliding(enemy) ) {
                     this.character.hit();
                     this.statusBar.setPercentage(this.character.energy, this.statusBar.Images_Health)
-                }
+                } 
             });
+
+            this.level.coins.forEach((coin) => {
+                if( this.character.isColliding(coin)) {
+                    this.level.coins.splice(coin, 1)
+                    this.character.coins += 10;
+                    console.log(this.character.coins)
+                    this.statusBarCoin.setPercentage(this.character.coins, this.statusBarCoin.Images_Coins)
+
+                }
+            })
         }, 200);
 
     }
@@ -40,14 +50,15 @@ class World {
         this.ctx.translate(this.camera_x, 0)
 
         this.addObjectsToMap(this.level.backgroundObjects);
-        this.addObjectsToMap(this.level.clouds)
-        this.addToMap(this.character)
-        this.addObjectsToMap(this.level.enemies)
-        this.ctx.translate(-this.camera_x, 0)
+        this.addObjectsToMap(this.level.clouds);
+        this.addToMap(this.character);
+        this.addObjectsToMap(this.level.enemies);
+        this.addObjectsToMap(this.level.coins);
+        this.ctx.translate(-this.camera_x, 0);
         //------fixed objects------
         this.addToMap(this.statusBar);
         this.addToMap(this.statusBarCoin);
-        this.addToMap(this.statusBarBottle)
+        this.addToMap(this.statusBarBottle);
         // draw() wird immer wieder aufgerufen
         self = this;
         requestAnimationFrame(function () {
