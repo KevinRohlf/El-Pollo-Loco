@@ -31,15 +31,15 @@ const level1 = new Level(
         new BackgroundObject('img/5_background/layers/1_first_layer/2.png', 719*3),
     ],
     [
-        new Coin(400, 100),
-        new Coin(400, 200),
-        new Coin(400, 300),
-        new Coin(800, 100),
-        new Coin(1000, 300),
-        new Coin(),
-        new Coin(),
-        new Coin(),
-        new Coin(),
+        new Coin(100),
+        new Coin(250),
+        new Coin(400),
+        new Coin(800),
+        new Coin(1000),
+        new Coin(1200),
+        new Coin(1500),
+        new Coin(1500),
+        new Coin(1500),
         new Coin(),
         new Coin(),
         new Coin(),
@@ -51,3 +51,4 @@ const level1 = new Level(
         new Coin(),
     ]
 )
+
