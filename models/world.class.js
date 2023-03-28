@@ -1,6 +1,5 @@
 class World {
     character = new Character();
-    throwableObject = new ThrowableObject();
     level = level1;
     canvas;
     ctx;
@@ -22,35 +21,51 @@ class World {
 
     setWorld() {
         this.character.world = this;
-        this.throwableObject.world = this;
     }
 
     run() {
         setInterval(() => {
 
             this.checkCollisions();
-            this.checkThrowObjects();        
+            this.checkThrowObjects();
+            this.deleteThrowObject();
         }, 200);
 
     }
 
     checkThrowObjects() {
         if (this.keyboard.D == true) {
-            let bottle = new ThrowableObject(this.character.x + 100, this.character.y + 100);
-            this.throwableObjects.push(bottle);
+            if (this.character.otherDirection) {
+                let bottle = new ThrowableObject(this.character.x, this.character.y + 100, 'reverse');
+                this.throwableObjects.push(bottle);
+            } else {
+                let bottle = new ThrowableObject(this.character.x + 100, this.character.y + 100);
+                this.throwableObjects.push(bottle);
+            }
+
         }
     }
 
+    deleteThrowObject() {
+        for (let i = 0; i < this.throwableObjects.length; i++) {
+
+            if (!this.throwableObjects[i].isAboveGround() || this.throwableObjects[i].energy <= 0) {
+                this.throwableObjects.splice(i, 1)
+            }
+        }
+    }
+
+
     checkCollisions() {
         this.level.enemies.forEach((enemy) => {
-            if( this.character.isColliding(enemy) ) {
-                this.character.hit();
+            if (this.character.isColliding(enemy) && enemy.energy > 0) {
+                this.character.hit(5);
                 this.statusBar.setPercentage(this.character.energy, this.statusBar.Images_Health)
-            } 
+            }
         });
 
         this.level.coins.forEach((coin) => {
-            if( this.character.isColliding(coin)) {
+            if (this.character.isColliding(coin)) {
                 this.level.coins.splice(coin, 1)
                 this.character.coins += 10;
                 console.log(this.character.coins)
@@ -58,6 +73,16 @@ class World {
 
             }
         })
+
+        this.throwableObjects.forEach(bottle => {
+            this.level.enemies.forEach(e => {
+                if (e.isColliding(bottle)) {
+                    e.hit(100);
+                    bottle.hit(40);
+                }
+            });
+
+        });
     }
 
     draw() {
