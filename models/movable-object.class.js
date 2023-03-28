@@ -16,10 +16,15 @@ class MovableObject extends DrawableObject {
     }
 
     isAboveGround() {
-        return this.y < 130
+        if (this instanceof ThrowableObject) { // Throwable Objects should always fall
+            return this.y < 350;
+        } else {
+            return this.y < 130;
+        }
+
     }
 
-    
+
 
     /*isColliding(mo) {
         return this.x + this.width > mo.x &&
@@ -28,19 +33,19 @@ class MovableObject extends DrawableObject {
             this.y < mo.y + mo.height;
     }*/
 
-    isColliding (mo) {
-        return  (this.x + this.width) >= mo.x  && this.x  <= (mo.x + mo.width) &&
-        (this.y + this.speedY + this.height) >= mo.y &&
-        (this.y + this.speedY) <= (mo.y + mo.height);
+    isColliding(mo) {
+        return (this.x + this.width) >= mo.x && this.x <= (mo.x + mo.width) &&
+            (this.y + this.speedY + this.height) >= mo.y &&
+            (this.y + this.speedY) <= (mo.y + mo.height);
     }
 
     hit() {
-        this.energy -= 5;  
-        if(this.energy < 0){
+        this.energy -= 5;
+        if (this.energy < 0) {
             this.energy = 0;
         } else {
             this.lastHit = new Date().getTime();
-        }       
+        }
     }
 
     isHurt() {
@@ -59,7 +64,7 @@ class MovableObject extends DrawableObject {
         (this.y + this.speedY) <= (mo.y + mo.height);
     }*/
 
-    
+
 
     playAnimation(images) {
         let i = this.currentImage % images.length;
