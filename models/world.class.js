@@ -25,22 +25,20 @@ class World {
 
     run() {
         setInterval(() => {
-
             this.checkCollisions();
             this.checkThrowObjects();
             this.deleteThrowObject();
         }, 200);
-
     }
 
     checkThrowObjects() {
         if (this.keyboard.D == true) {
             if (this.character.otherDirection) {
                 let bottle = new ThrowableObject(this.character.x, this.character.y + 100, 'reverse');
-                this.throwableObjects.push(bottle);
+                this.throwableObjects.push(bottle);                
             } else {
                 let bottle = new ThrowableObject(this.character.x + 100, this.character.y + 100);
-                this.throwableObjects.push(bottle);
+                this.throwableObjects.push(bottle);                
             }
 
         }

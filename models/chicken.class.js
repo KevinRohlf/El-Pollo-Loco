@@ -31,6 +31,9 @@ class Chicken extends MovableObject {
             if (this.energy <= 0){
                 this.loadImage(this.image_Dead)
                 this.speed = 0;
+                setTimeout(() => {
+                    this.y = 20000
+                }, 1000);
             } else {
                this.playAnimation(this.images_Walking) 
             }
