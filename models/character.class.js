@@ -2,8 +2,16 @@ class Character extends MovableObject {
     height = 300;
     width = 130;
     y = 30;
-    speed = 10;
-    coins = 0
+    speed = 5;
+    coins = 0;
+    offset = {
+        top: 120,
+        left: 20,
+        right: 20,
+        bottom: 0
+    };
+
+    
     images_Walking = [
         'img/2_character_pepe/2_walk/W-21.png',
         'img/2_character_pepe/2_walk/W-22.png',
@@ -88,9 +96,9 @@ class Character extends MovableObject {
             //this.walking_sound.pause();
             if (this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x) {
                 this.moveRight();
-                this.otherDirection = false;                
+                this.otherDirection = false;
                 this.setLastMoveTime()
-                
+
                 //this.walking_sound.play();
             }
 
@@ -102,7 +110,7 @@ class Character extends MovableObject {
             }
 
             if (this.world.keyboard.SPACE && !this.isAboveGround()) {
-                this.jump();                
+                this.jump();
                 this.setLastMoveTime()
             }
 
@@ -116,17 +124,18 @@ class Character extends MovableObject {
             } else if (this.isHurt()) {
                 this.playAnimation(this.images_Hurt);
             } else if (this.isAboveGround()) {
-                this.playAnimation(this.images_Jumping);  
+                this.playAnimation(this.images_Jumping);
             } else if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) {
-                //Walk animation
                 this.playAnimation(this.images_Walking);
+                //Walk animation
             } else if (this.checkIdleTime()) {
                 this.playAnimation(this.images_LongIdle);
             } else {
                 this.playAnimation(this.images_Idle);
             }
 
-        }, 50)
+        }, 100)
+
         
 
     }

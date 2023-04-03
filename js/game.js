@@ -64,3 +64,7 @@ window.addEventListener("keyup", (e) => {
         keyboard.D = false;
     }  
 })
+
+function fullscreen() {
+    canvas.requestFullscreen();
+}

@@ -5,9 +5,19 @@ body {
     margin: 0;
 }
 
+.gap-10 {
+    display: flex;
+    gap: 10px;
+}
+
+.hud {
+    display: none;
+}
+
 canvas {
     background-color: black;
     display: block;
+    position: relative;
 }
 
 @media only screen and (max-width: 720px) {
@@ -19,9 +29,29 @@ canvas {
 @media only screen and (max-height: 480px) {
     canvas {
         height: 100svh;
+        width: 100%;
     }
     h1 {
         display: none;
+    }
+
+    .fullscreen {
+        display: none;
+    }
+
+    .hud {
+        position: absolute;
+        right: 0;
+        left: 0;
+        bottom: 0;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .btns button {
+        width: 70px;
+        height: 70px;
+        border-radius: 100%;
     }
 }
 
