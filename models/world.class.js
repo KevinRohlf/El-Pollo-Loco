@@ -32,6 +32,7 @@ class World {
             this.deleteThrowObject();
             this.chickenAttack()
             this.enemyDead()
+            this.endbossFight()
         }, 1000 / 60);
     }
 
@@ -99,6 +100,18 @@ class World {
         }, 1000);
     }
 
+    endbossFight() {
+        this.level.enemies.forEach(enemy => {
+            
+                if (enemy instanceof Endboss && this.character.x >= 1300 || enemy.activate && enemy.energy > 0 && !enemy.isHurt()){
+                    
+                    enemy.run(this.character)
+                    enemy.activate = true;
+                }
+            
+        });
+    }
+
 
     checkCollisions() {
         if (!this.character.isHurt()) {
@@ -143,7 +156,7 @@ class World {
 
     collisionWithEndboss(enemy) {
         if (this.character.isColliding(enemy) && enemy.energy > 0 && enemy instanceof Endboss) {
-            this.character.hit(5);
+            this.character.hit(20);
             this.statusBar.setPercentage(this.character.energy, this.statusBar.Images_Health)
         }
     }
