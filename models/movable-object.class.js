@@ -5,6 +5,7 @@ class MovableObject extends DrawableObject {
     acceleration = 2.5;
     energy = 100;
     lastHit = 0;
+    deleted = false;
     Interval = [];
 
     offset = {
@@ -25,7 +26,8 @@ class MovableObject extends DrawableObject {
     }
 
     isAboveGround() {
-        if (this instanceof ThrowableObject) { // Throwable Objects should always fall
+        
+        if (this instanceof ThrowableObject || this instanceof Chicken) { // Throwable Objects should always fall
             return this.y < 350;
         } else {
             return this.y < 130;
@@ -101,5 +103,13 @@ class MovableObject extends DrawableObject {
             this.speedY = 30;
         }
 
+    }
+
+    rushAttack() {
+        this.speed = 3;
+        if (!this.isAboveGround()) {
+          this.jump('low')  
+        }
+        
     }
 }

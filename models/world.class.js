@@ -30,6 +30,8 @@ class World {
             this.checkCollisions();
             this.checkThrowObjects();
             this.deleteThrowObject();
+            this.chickenAttack()
+            this.enemyDead()
         }, 1000 / 60);
     }
 
@@ -44,14 +46,24 @@ class World {
             if (this.character.otherDirection && this.lastThrow()) {
                 let bottle = new ThrowableObject(this.character.x, this.character.y + 100, 'reverse');
                 this.throwableObjects.push(bottle);
-                this.lastThrowTime = new Date().getTime();                
-            } else if(this.lastThrow()){
+                this.lastThrowTime = new Date().getTime();
+                this.character.setLastMoveTime();
+            } else if (this.lastThrow()) {
                 let bottle = new ThrowableObject(this.character.x + 100, this.character.y + 100);
                 this.throwableObjects.push(bottle);
-                this.lastThrowTime = new Date().getTime();                 
+                this.lastThrowTime = new Date().getTime();
+                this.character.setLastMoveTime();
             }
 
         }
+    }
+
+    chickenAttack() {
+        this.level.enemies.forEach((enemy) => {
+            if (enemy.x - this.character.x < 400 && enemy.energy > 0) {
+                enemy.rushAttack();
+            }
+        })
     }
 
     deleteThrowObject() {
@@ -63,15 +75,39 @@ class World {
         }
     }
 
+    enemyDead() {
+        for (let i = 0; i < this.level.enemies.length; i++) {
+            if (this.level.enemies[i].energy == 0 && !this.level.enemies[i].deleted) {
+                this.level.enemies[i].deleted = true;
+                this.deleteEnemy(i);
+                console.log(i)
+            }
+        }
+
+        //this.level.enemies.forEach(enemy , index => {
+        //    if (enemy.energy <= 0 && !enemy.deleted){
+        //        setTimeout(() => {
+        //            this.level.enemies.splice(index, 1)
+        //        }, 1000);
+        //    };
+        //});
+    }
+
+    deleteEnemy(i) {
+        setTimeout(() => {
+            this.level.enemies.splice(i, 1)
+        }, 1000);
+    }
+
 
     checkCollisions() {
-        if(!this.character.isHurt()){
-           this.level.enemies.forEach((enemy) => {
-            this.collisionWithChicken(enemy);
-            this.collisionWithEndboss(enemy)
-        }); 
+        if (!this.character.isHurt()) {
+            this.level.enemies.forEach((enemy) => {
+                this.collisionWithChicken(enemy);
+                this.collisionWithEndboss(enemy)
+            });
         }
-        
+
 
         this.level.coins.forEach((coin) => {
             if (this.character.isColliding(coin)) {
@@ -99,13 +135,13 @@ class World {
             this.character.hit(5);
             this.statusBar.setPercentage(this.character.energy, this.statusBar.Images_Health)
         }
-        if(this.character.isColliding(enemy) && this.character.isAboveGround() && enemy instanceof Chicken && enemy.energy > 0 ) {
+        if (this.character.isColliding(enemy) && this.character.isAboveGround() && enemy instanceof Chicken && enemy.energy > 0) {
             enemy.energy -= 100;
             this.character.jump('low')
         }
     }
 
-    collisionWithEndboss(enemy){
+    collisionWithEndboss(enemy) {
         if (this.character.isColliding(enemy) && enemy.energy > 0 && enemy instanceof Endboss) {
             this.character.hit(5);
             this.statusBar.setPercentage(this.character.energy, this.statusBar.Images_Health)
