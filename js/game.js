@@ -1,6 +1,7 @@
 let canvas;
 let world;
 let keyboard = new Keyboard();
+let fullscreenMode = false;
 
 
 
@@ -66,5 +67,6 @@ window.addEventListener("keyup", (e) => {
 })
 
 function fullscreen() {
-    canvas.requestFullscreen();
+    document.getElementById('content').requestFullscreen();
 }
+

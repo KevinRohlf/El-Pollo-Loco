@@ -43,17 +43,21 @@ class World {
     }
 
     checkThrowObjects() {
-        if (this.keyboard.D == true) {
+        if (this.keyboard.D == true && this.character.bottles > 0) {
             if (this.character.otherDirection && this.lastThrow()) {
                 let bottle = new ThrowableObject(this.character.x, this.character.y + 100, 'reverse');
                 this.throwableObjects.push(bottle);
                 this.lastThrowTime = new Date().getTime();
                 this.character.setLastMoveTime();
+                this.character.bottles -= 10;
+                this.statusBarBottle.setPercentage(this.character.bottles, this.statusBarBottle.Images_Bottle)
             } else if (this.lastThrow()) {
                 let bottle = new ThrowableObject(this.character.x + 100, this.character.y + 100);
                 this.throwableObjects.push(bottle);
                 this.lastThrowTime = new Date().getTime();
                 this.character.setLastMoveTime();
+                this.character.bottles -= 10;
+                this.statusBarBottle.setPercentage(this.character.bottles, this.statusBarBottle.Images_Bottle)
             }
 
         }
@@ -69,7 +73,6 @@ class World {
 
     deleteThrowObject() {
         for (let i = 0; i < this.throwableObjects.length; i++) {
-
             if (!this.throwableObjects[i].isAboveGround()) {
                 this.throwableObjects.splice(i, 1)
             }
@@ -80,35 +83,21 @@ class World {
         for (let i = 0; i < this.level.enemies.length; i++) {
             if (this.level.enemies[i].energy == 0 && !this.level.enemies[i].deleted) {
                 this.level.enemies[i].deleted = true;
-                this.deleteEnemy(i);
-                console.log(i)
+                setTimeout(() => {
+                    if (this.level.enemies[i].deleted){
+                      this.level.enemies.splice(i, 1)  
+                    }
+                }, 1000);       
             }
         }
-
-        //this.level.enemies.forEach(enemy , index => {
-        //    if (enemy.energy <= 0 && !enemy.deleted){
-        //        setTimeout(() => {
-        //            this.level.enemies.splice(index, 1)
-        //        }, 1000);
-        //    };
-        //});
-    }
-
-    deleteEnemy(i) {
-        setTimeout(() => {
-            this.level.enemies.splice(i, 1)
-        }, 1000);
     }
 
     endbossFight() {
         this.level.enemies.forEach(enemy => {
-            
                 if (enemy instanceof Endboss && this.character.x >= 1300 || enemy.activate && enemy.energy > 0 && !enemy.isHurt()){
-                    
                     enemy.run(this.character)
                     enemy.activate = true;
                 }
-            
         });
     }
 
@@ -128,6 +117,16 @@ class World {
                 this.character.coins += 10;
                 console.log(this.character.coins)
                 this.statusBarCoin.setPercentage(this.character.coins, this.statusBarCoin.Images_Coins)
+
+            }
+        })
+
+        this.level.bottles.forEach((bottle) => {
+            if (this.character.isColliding(bottle)) {
+                this.level.bottles.splice(bottle, 1)
+                this.character.bottles += 10;
+                console.log(this.character.bottles)
+                this.statusBarBottle.setPercentage(this.character.bottles, this.statusBarBottle.Images_Bottle)
 
             }
         })
@@ -171,6 +170,7 @@ class World {
         this.addToMap(this.character);
         this.addObjectsToMap(this.level.enemies);
         this.addObjectsToMap(this.level.coins);
+        this.addObjectsToMap(this.level.bottles);
         this.addObjectsToMap(this.throwableObjects);
         this.ctx.translate(-this.camera_x, 0);
         //------fixed objects------

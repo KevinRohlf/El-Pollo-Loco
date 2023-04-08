@@ -5,6 +5,8 @@ class Endboss extends MovableObject {
     y = 50;
     energy = 500;
     activate = false;
+    speed = 20;
+    
 
     images_Walking = [
         'img/4_enemie_boss_chicken/1_walk/G1.png',
@@ -48,10 +50,10 @@ class Endboss extends MovableObject {
 
     run(character) {
         if (this.x > character.x) {
-            this.moveLeft()
+            this.moveLeft(6)
             this.otherDirection = false;
         } else {
-            this.moveRight()
+            this.moveRight(6)
             this.otherDirection = true;
         }
     }
