@@ -70,3 +70,6 @@ function fullscreen() {
     document.getElementById('content').requestFullscreen();
 }
 
+function restart() {
+    window.location.reload();
+}

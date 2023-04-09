@@ -25,6 +25,7 @@
     <script src="./models/throwable-object.class.js"></script>
     <script src="./models/endboss.class.js"></script>
     <script src="./levels/level1.js"></script>
+    <script src="./levels/level2.js"></script>
     <script src="./js/game.js"></script>
 </head>
 
@@ -32,15 +33,23 @@
     <h1>El Pollo Loco</h1>
     <div id="content">
         <canvas id="canvas" width="720" height="480"></canvas>
-        <img id="startscreen" src="img/9_intro_outro_screens/start/startscreen_2.png" alt="startscreen">
+        <div class="game-images">
+            <img id="startscreen" src="img/9_intro_outro_screens/start/startscreen_2.png" alt="startscreen">
+            <img class="d-none" id="gameOver" src="img/9_intro_outro_screens/game_over/game over!.png" alt="game over">
+            <img class="d-none" id="lost" src="img\9_intro_outro_screens\game_over\oh no you lost!.png" alt="lost">
+        </div>
+
         <div class="btns fullscreen">
             <img src="./img/hud/fullscreen.svg" alt="fullscreen" onclick="fullscreen()">
+        </div>
+        <div id="restartBtn" class="d-none">
+            <button class="btns" onclick="restart()">Restart</button>
         </div>
         <div id="startbtn">
             <button class="btns" onclick="start(); init()">Start</button>
         </div>
-        
-        
+
+
     </div>
 
     <div class="hud">

@@ -16,6 +16,10 @@ body {
     background: #fff url('img/desert-5112222.svg') center center/cover no-repeat;
 }
 
+.d-none {
+    display: none !important;
+}
+
 #content {
     position: relative;
 }
@@ -36,7 +40,9 @@ body {
     transition: all ease-in-out 175ms;
 }
 
-#startscreen {
+#startscreen,
+#gameOver,
+#lost {
     position: absolute;
     top: 0;
     left: 0;
@@ -44,9 +50,11 @@ body {
     bottom: 0;
     width: 100%;
     height: 100%;
+    border-radius: 20px;
 }
 
-#startbtn {
+#startbtn,
+#restartBtn {
     position: absolute;
     bottom: 30px;
     left: 0;
@@ -55,7 +63,8 @@ body {
     justify-content: center;
 }
 
-#startbtn button {
+#startbtn button,
+#restartBtn button {
     background-color: #FFC402;
     width: 100px;
     height: 30px;

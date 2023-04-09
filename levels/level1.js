@@ -1,8 +1,7 @@
 let level1;
 
 function start() {
-    level1 = new Level(
-        [
+    let enemys = [
             new Chicken(),
             new SmallChicken(),
             new Chicken(),
@@ -10,11 +9,11 @@ function start() {
             new Chicken(),
             new SmallChicken(),
             new Endboss()
-        ],
-        [
+        ];
+    let clouds = [
             new Cloud()
-        ],
-        [
+        ];
+    let background = [
             new BackgroundObject('img/5_background/layers/air.png', -719),
             new BackgroundObject('img/5_background/layers/3_third_layer/2.png', -719),
             new BackgroundObject('img/5_background/layers/2_second_layer/2.png', -719),
@@ -35,30 +34,21 @@ function start() {
             new BackgroundObject('img/5_background/layers/3_third_layer/2.png', 719*3),
             new BackgroundObject('img/5_background/layers/2_second_layer/2.png', 719*3),
             new BackgroundObject('img/5_background/layers/1_first_layer/2.png', 719*3),
-        ],
-        [
-            new Coin(100),
-            new Coin(250),
-            new Coin(400),
-            new Coin(800),
-            new Coin(1000),
-            new Coin(1200),
-            new Coin(1500),
-            new Coin(1500),
-            new Coin(1500),
-            new Coin(),
-            new Coin(),
-            new Coin(),
-            new Coin(),
-            new Coin(),
-            new Coin(),
-            new Coin(),
-            new Coin(),
-            new Coin(),
-        ],[
-            new Bottle()
-        ]
-    );
+        ];
+    let coins = [];
+    let bottles = [];
+    let statusBar = new StatusBar();
+    let statusBarCoin = new StatusBarCoin();
+    let statusBarBottle = new StatusBarBottle();
+
+    for (let i = 1 ;i < 15 ; i++) {
+        coins.push(new Coin(i * 100),)
+    };
+    for (let i = 1 ;i < 10 ; i++) {
+        bottles.push(new Bottle(i * 100),)
+    }
+
+    level1 = new Level(enemys, clouds, background, coins, bottles, statusBar, statusBarCoin, statusBarBottle);
 
     document.getElementById('startscreen').style = 'display: none;';
     document.getElementById('startbtn').style = 'display: none;';

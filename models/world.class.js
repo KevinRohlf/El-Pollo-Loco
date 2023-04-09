@@ -5,11 +5,10 @@ class World {
     ctx;
     keyboard;
     camera_x = 0;
-    statusBar = new StatusBar();
-    statusBarCoin = new StatusBarCoin();
-    statusBarBottle = new StatusBarBottle();
     throwableObjects = [];
     lastThrowTime;
+    Interval = [];
+    gameOver = false;
 
     constructor(canvas, keyboard) {
         this.ctx = canvas.getContext('2d');
@@ -25,14 +24,24 @@ class World {
         this.character.world = this;
     }
 
+    setStopableInterval(fn, time) {
+        let id = setInterval(fn, time);
+        this.Interval.push(id);
+    }
+
+    clearIntervals() {
+        this.Interval.forEach(clearInterval);
+    }
+    
     run() {
-        setInterval(() => {
+        this.setStopableInterval(() => {
             this.checkCollisions();
             this.checkThrowObjects();
             this.deleteThrowObject();
-            this.chickenAttack()
-            this.enemyDead()
-            this.endbossFight()
+            this.chickenAttack();
+            this.enemyDead();
+            this.endbossFight();
+            this.checkEnd();
         }, 1000 / 60);
     }
 
@@ -50,14 +59,14 @@ class World {
                 this.lastThrowTime = new Date().getTime();
                 this.character.setLastMoveTime();
                 this.character.bottles -= 10;
-                this.statusBarBottle.setPercentage(this.character.bottles, this.statusBarBottle.Images_Bottle)
+                this.level.statusBarBottle.setPercentage(this.character.bottles, this.level.statusBarBottle.Images_Bottle)
             } else if (this.lastThrow()) {
                 let bottle = new ThrowableObject(this.character.x + 100, this.character.y + 100);
                 this.throwableObjects.push(bottle);
                 this.lastThrowTime = new Date().getTime();
                 this.character.setLastMoveTime();
                 this.character.bottles -= 10;
-                this.statusBarBottle.setPercentage(this.character.bottles, this.statusBarBottle.Images_Bottle)
+                this.level.statusBarBottle.setPercentage(this.character.bottles, this.level.statusBarBottle.Images_Bottle)
             }
 
         }
@@ -84,21 +93,47 @@ class World {
             if (this.level.enemies[i].energy == 0 && !this.level.enemies[i].deleted) {
                 this.level.enemies[i].deleted = true;
                 setTimeout(() => {
-                    if (this.level.enemies[i].deleted){
-                      this.level.enemies.splice(i, 1)  
+                    if (this.level.enemies[i].deleted) {
+                        this.level.enemies.splice(i, 1)
                     }
-                }, 1000);       
+                }, 1000);
             }
         }
     }
 
     endbossFight() {
         this.level.enemies.forEach(enemy => {
-                if (enemy instanceof Endboss && this.character.x >= 1300 || enemy.activate && enemy.energy > 0 && !enemy.isHurt()){
-                    enemy.run(this.character)
-                    enemy.activate = true;
-                }
+            if (enemy instanceof Endboss && this.character.x >= 1300 || enemy.activate && enemy.energy > 0 && !enemy.isHurt()) {
+                enemy.run(this.character)
+                enemy.activate = true;
+            }
         });
+    }
+
+    checkEnd() {
+        if (this.character.energy <= 0) {
+            setTimeout(() => {
+                this.character.clearIntervals();
+                this.level = level2;
+                this.gameOver = true;
+                document.getElementById('restartBtn').classList.remove('d-none'); 
+                document.getElementById('lost').classList.remove('d-none');
+            }, 1000);
+            
+        }
+        this.level.enemies.forEach(enemy => {
+            if (enemy instanceof Endboss && enemy.energy <= 0) {
+                setTimeout(() => {
+                    this.character.clearIntervals();
+                    this.level = level2;
+                    this.gameOver = true;                    
+                    document.getElementById('restartBtn').classList.remove('d-none');
+                    document.getElementById('gameOver').classList.remove('d-none');
+                }, 1000);
+                
+            }
+        })
+
     }
 
 
@@ -116,7 +151,7 @@ class World {
                 this.level.coins.splice(coin, 1)
                 this.character.coins += 10;
                 console.log(this.character.coins)
-                this.statusBarCoin.setPercentage(this.character.coins, this.statusBarCoin.Images_Coins)
+                this.level.statusBarCoin.setPercentage(this.character.coins, this.level.statusBarCoin.Images_Coins)
 
             }
         })
@@ -126,7 +161,7 @@ class World {
                 this.level.bottles.splice(bottle, 1)
                 this.character.bottles += 10;
                 console.log(this.character.bottles)
-                this.statusBarBottle.setPercentage(this.character.bottles, this.statusBarBottle.Images_Bottle)
+                this.level.statusBarBottle.setPercentage(this.character.bottles, this.level.statusBarBottle.Images_Bottle)
 
             }
         })
@@ -145,7 +180,7 @@ class World {
     collisionWithChicken(enemy) {
         if (this.character.isColliding(enemy) && enemy.energy > 0 && !this.character.isAboveGround() && enemy instanceof Chicken) {
             this.character.hit(5);
-            this.statusBar.setPercentage(this.character.energy, this.statusBar.Images_Health)
+            this.level.statusBar.setPercentage(this.character.energy, this.level.statusBar.Images_Health)
         }
         if (this.character.isColliding(enemy) && this.character.isAboveGround() && enemy instanceof Chicken && enemy.energy > 0) {
             enemy.energy -= 100;
@@ -156,7 +191,7 @@ class World {
     collisionWithEndboss(enemy) {
         if (this.character.isColliding(enemy) && enemy.energy > 0 && enemy instanceof Endboss) {
             this.character.hit(20);
-            this.statusBar.setPercentage(this.character.energy, this.statusBar.Images_Health)
+            this.level.statusBar.setPercentage(this.character.energy, this.level.statusBar.Images_Health)
         }
     }
 
@@ -167,16 +202,21 @@ class World {
 
         this.addObjectsToMap(this.level.backgroundObjects);
         this.addObjectsToMap(this.level.clouds);
-        this.addToMap(this.character);
+        if(!this.gameOver) {
+            this.addToMap(this.character);
+        };
         this.addObjectsToMap(this.level.enemies);
         this.addObjectsToMap(this.level.coins);
         this.addObjectsToMap(this.level.bottles);
         this.addObjectsToMap(this.throwableObjects);
         this.ctx.translate(-this.camera_x, 0);
         //------fixed objects------
-        this.addToMap(this.statusBar);
-        this.addToMap(this.statusBarCoin);
-        this.addToMap(this.statusBarBottle);
+        if (!this.gameOver) {
+            this.addToMap(this.level.statusBar);
+            this.addToMap(this.level.statusBarCoin);
+            this.addToMap(this.level.statusBarBottle); 
+        }
+        
         // draw() wird immer wieder aufgerufen
         self = this;
         requestAnimationFrame(function () {
