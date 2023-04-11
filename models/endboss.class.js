@@ -6,6 +6,12 @@ class Endboss extends MovableObject {
     energy = 500;
     activate = false;
     speed = 20;
+    offset = {
+        top: 80,
+        left: 50,
+        right: 50,
+        bottom: 10
+    };
     
 
     images_Walking = [
@@ -52,7 +58,7 @@ class Endboss extends MovableObject {
         if (this.x > character.x) {
             this.moveLeft(6)
             this.otherDirection = false;
-        } else {
+        } else if (this.x < character.x) {
             this.moveRight(6)
             this.otherDirection = true;
         }

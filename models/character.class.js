@@ -6,10 +6,10 @@ class Character extends MovableObject {
     coins = 0;
     bottles = 0;
     offset = {
-        top: 120,
-        left: 20,
-        right: 20,
-        bottom: 0
+        top: 130,
+        left: 40,
+        right: 40,
+        bottom: 15
     };
 
     

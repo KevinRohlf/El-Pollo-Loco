@@ -73,3 +73,17 @@ function fullscreen() {
 function restart() {
     window.location.reload();
 }
+
+function openSettings() {
+    let btn = document.getElementById('settingsBtn');
+    btn.setAttribute('onclick', 'closeSettings()');
+    btn.src = 'img/hud/close.svg'
+    document.getElementById('settings').classList.remove('d-none');
+}
+
+function closeSettings() {
+    let btn = document.getElementById('settingsBtn');
+    btn.setAttribute('onclick', 'openSettings()');
+    btn.src = 'img/hud/settings.svg'
+    document.getElementById('settings').classList.add('d-none');
+}

@@ -4,6 +4,13 @@ class SmallChicken extends Chicken {
     width = 50;
     y = 370;
 
+    offset = {
+        top: 10,
+        left: 10,
+        right: 10,
+        bottom: 10
+    };
+
 
 
     images_Walking = [

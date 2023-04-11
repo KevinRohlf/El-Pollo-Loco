@@ -8,6 +8,13 @@ class Bottle extends MovableObject {
         'img/6_salsa_bottle/2_salsa_bottle_on_ground.png'
     ];
 
+    offset = {
+        top: 10,
+        left: 20,
+        right: 20,
+        bottom: 10
+    }
+
 
     constructor(x) {
         super().loadImage(this.Image_Bottle[this.randomBottle()]);

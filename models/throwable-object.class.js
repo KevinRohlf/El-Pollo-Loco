@@ -1,4 +1,10 @@
 class ThrowableObject extends MovableObject {
+    offset = {
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0
+    }
 
     images_Hit = [
         'img/6_salsa_bottle/bottle_rotation/bottle_splash/1_bottle_splash.png',

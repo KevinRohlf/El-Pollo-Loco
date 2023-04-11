@@ -44,20 +44,19 @@ class MovableObject extends DrawableObject {
         this.Interval.forEach(clearInterval);
     }
 
-    //isColliding(mo) {
-    //    return (this.x + this.width) >= mo.x && this.x <= (mo.x + mo.width) &&
-    //        (this.y + this.speedY + this.height) >= mo.y &&
-    //        (this.y + this.speedY) <= (mo.y + mo.height);
-    //}
 
     isColliding(mo) {
-
-        return this.x + this.width - this.offset.right > mo.x + mo.offset.left &&
-            this.y + this.height - this.offset.bottom > mo.y + mo.offset.top &&
-            this.x + this.offset.left < mo.x + mo.width - mo.offset.right &&
-            this.y + this.offset.top < mo.y + mo.height - mo.offset.bottom;
-
+        return this.x + this.width - this.offset.right >= mo.x + mo.offset.left &&
+            this.y + this.height - this.offset.bottom >= mo.y + mo.offset.top &&
+            this.x + this.offset.left <= mo.x + mo.width - mo.offset.right &&
+            this.y + this.offset.top <= mo.y + mo.height - mo.offset.bottom;
     }
+
+    //isColliding (obj) {
+    //    return  (this.x + this.width) >= obj.x && this.x <= (obj.x + obj.width) && 
+    //            (this.y + this.offset.bottom + this.height) >= obj.y &&
+    //            (this.y + this.offset.bottom) <= (obj.y + obj.height)
+    //}
 
     hit(value) {
         this.energy -= value;

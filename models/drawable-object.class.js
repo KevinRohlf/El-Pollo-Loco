@@ -26,8 +26,8 @@ class DrawableObject {
     }
 
     drawFrame(ctx) {
-        if(this.hitboxRender) {
-           if (this instanceof Character || this instanceof Chicken || this instanceof Endboss) {
+        if(this.hitboxrender) {
+           if (this instanceof Character || this instanceof Chicken || this instanceof Endboss || this instanceof Coin || this instanceof ThrowableObject || this instanceof Bottle) {
             ctx.beginPath();
             ctx.lineWidth = '5';
             ctx.strokeStyle = 'red';
@@ -35,7 +35,7 @@ class DrawableObject {
             ctx.rect(this.x + this.offset.left, this.y + this.offset.top, this.width - this.offset.left - this.offset.right, this.height - this.offset.top - this.offset.bottom);
             ctx.stroke();
         } 
-        }
+    }
         
     }
 }
