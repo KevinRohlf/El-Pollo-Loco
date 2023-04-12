@@ -10,6 +10,7 @@ class World {
     Interval = [];
     gameOver = false;
     endFight = false;
+    audio = true;
 
     constructor(canvas, keyboard) {
         this.ctx = canvas.getContext('2d');
@@ -64,16 +65,16 @@ class World {
 
     throwBottle(direction) {
         let bottle;
-        if (direction == 'right'){
+        if (direction == 'right') {
             bottle = new ThrowableObject(this.character.x + 100, this.character.y + 100);
-        } else if (direction == 'left'){
+        } else if (direction == 'left') {
             bottle = new ThrowableObject(this.character.x, this.character.y + 100, 'reverse');
         };
-                this.throwableObjects.push(bottle);
-                this.lastThrowTime = new Date().getTime();
-                this.character.setLastMoveTime();
-                this.character.bottles -= 10;
-                this.level.statusBarBottle.setPercentage(this.character.bottles, this.level.statusBarBottle.Images_Bottle)
+        this.throwableObjects.push(bottle);
+        this.lastThrowTime = new Date().getTime();
+        this.character.setLastMoveTime();
+        this.character.bottles -= 10;
+        this.level.statusBarBottle.setPercentage(this.character.bottles, this.level.statusBarBottle.Images_Bottle)
     }
 
     chickenAttack() {
@@ -86,8 +87,15 @@ class World {
 
     deleteThrowObject() {
         for (let i = 0; i < this.throwableObjects.length; i++) {
-            if (!this.throwableObjects[i].isAboveGround()) {
-                this.throwableObjects.splice(i, 1)
+            if (!this.throwableObjects[i].isAboveGround() && !this.throwableObjects[i].deleted) {
+                this.throwableObjects[i].deleted = true;
+                setTimeout(() => {
+                    if (this.throwableObjects[i].deleted) {
+                        this.throwableObjects.splice(i, 1)
+                    }
+                }, 500);
+
+
             }
         }
     }
@@ -108,7 +116,7 @@ class World {
     endbossFight() {
         this.level.enemies.forEach(enemy => {
             if (enemy instanceof Endboss && this.character.x >= 1300 || enemy.activate) {
-                if (enemy.energy > 0 && !enemy.isHurt()){
+                if (enemy.energy > 0 && !enemy.isHurt()) {
                     enemy.run(this.character)
                 }
                 this.endFight = true;
@@ -163,10 +171,19 @@ class World {
     collisionWithThrowableObject() {
         this.throwableObjects.forEach(bottle => {
             this.level.enemies.forEach(e => {
-                if (e.isColliding(bottle) && bottle.energy > 0) {
+                if (e.isColliding(bottle) && bottle.energy > 0 && bottle.isAboveGround()) {
                     e.hit(100);
                     bottle.hit(100);
+                    if(this.audio) {
+                        bottle.bottle_sound.play();  
+                    }                   
                 };
+                if(!bottle.isAboveGround() && bottle.energy > 0 ) {
+                    bottle.speedX = 0;
+                    if(this.audio) {
+                        bottle.bottle_sound.play();  
+                    }   
+                }
                 if (e instanceof Endboss) {
                     this.level.statusBarEndboss.setPercentage(e.energy / 4.5, this.level.statusBarEndboss.Images_Health)
                 }
@@ -234,10 +251,10 @@ class World {
             this.addToMap(this.level.statusBar);
             this.addToMap(this.level.statusBarCoin);
             this.addToMap(this.level.statusBarBottle);
-            if(this.endFight){
-                this.addToMap(this.level.statusBarEndboss);  
+            if (this.endFight) {
+                this.addToMap(this.level.statusBarEndboss);
             }
-            
+
         }
 
         // draw() wird immer wieder aufgerufen

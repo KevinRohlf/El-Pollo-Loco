@@ -73,7 +73,8 @@ class Character extends MovableObject {
         'img/2_character_pepe/4_hurt/H-42.png',
         'img/2_character_pepe/4_hurt/H-43.png'
     ]
-    //walking_sound = new Audio('../audio/running2.mp3');
+    walking_sound = new Audio('../audio/running.mp3');
+    jump_sound = new Audio('../audio/jump.mp3');
 
     world;
     lastMoveTime;
@@ -94,25 +95,32 @@ class Character extends MovableObject {
 
     animate() {
         this.setStopableInterval(() => {
-            //this.walking_sound.pause();
+            this.walking_sound.pause();
+            
             if (this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x) {
                 this.moveRight();
                 this.otherDirection = false;
                 this.setLastMoveTime()
-
-                //this.walking_sound.play();
+                if(this.world.audio) {
+                    this.walking_sound.play();
+                }
             }
 
             if (this.world.keyboard.LEFT && this.x > 0) {
                 this.moveLeft()
                 this.otherDirection = true;
                 this.setLastMoveTime()
-                //this.walking_sound.play();
+                if(this.world.audio) {
+                    this.walking_sound.play();
+                }
             }
 
             if (this.world.keyboard.SPACE && !this.isAboveGround()) {
                 this.jump();
-                this.setLastMoveTime()
+                this.setLastMoveTime();
+                if(this.world.audio) {
+                    this.jump_sound.play();
+                }
             }
 
 
@@ -134,11 +142,7 @@ class Character extends MovableObject {
             } else {
                 this.playAnimation(this.images_Idle);
             }
-
         }, 100)
-
-        
-
     }
 
     setLastMoveTime() {

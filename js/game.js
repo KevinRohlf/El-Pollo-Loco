@@ -8,10 +8,6 @@ let fullscreenMode = false;
 function init() {
     canvas = document.getElementById('canvas');
     world = new World(canvas, keyboard);
-    
-    
-
-    console.log('My character is', world.character);
 }
 
 window.addEventListener("keydown", (e) => {
@@ -86,4 +82,18 @@ function closeSettings() {
     btn.setAttribute('onclick', 'openSettings()');
     btn.src = 'img/hud/settings.svg'
     document.getElementById('settings').classList.add('d-none');
+}
+
+function volumeMute() {
+    world.audio = false;
+    let volume = document.getElementById('volume');
+    volume.src = 'img/hud/volume-off.svg';
+    volume.setAttribute('onclick', 'volumeUp()');
+}
+
+function volumeUp() {
+    world.audio = true;
+    let volume = document.getElementById('volume');
+    volume.src = 'img/hud/volume.svg';
+    volume.setAttribute('onclick', 'volumeMute()');
 }

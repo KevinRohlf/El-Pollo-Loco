@@ -5,6 +5,9 @@ class ThrowableObject extends MovableObject {
         right: 0,
         bottom: 0
     }
+    deleted = false;
+    speedX = 5;
+    bottle_sound = new Audio('../audio/glass.mp3'); 
 
     images_Hit = [
         'img/6_salsa_bottle/bottle_rotation/bottle_splash/1_bottle_splash.png',
@@ -35,13 +38,13 @@ class ThrowableObject extends MovableObject {
 
     animate() {
         setInterval(() => {
-            if (this.isHurt()) {
+            if (this.isHurt() || !this.isAboveGround()) {
                 this.playAnimation(this.images_Hit);
             }
         }, 200);
 
         setInterval(() => {
-            if (!this.isHurt()) {
+            if (!this.isHurt() && this.isAboveGround()) {
                this.playAnimation(this.images_Spin); 
             }
         }, 100);
@@ -52,11 +55,11 @@ class ThrowableObject extends MovableObject {
         this.applyGravity();
         if (reverse == 'reverse') {
             setInterval(() => {
-                this.x -= 5
+                this.x -= this.speedX
             }, 25);
         } else {
             setInterval(() => {
-                this.x += 5
+                this.x += this.speedX
             }, 25);
         }
     }
