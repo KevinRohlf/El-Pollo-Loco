@@ -1,5 +1,8 @@
 let level1;
 
+/**
+ * this function gives the level the items
+ */
 function start() {
     let enemys = [
             new Chicken(),
@@ -53,5 +56,6 @@ function start() {
 
     document.getElementById('startscreen').style = 'display: none;';
     document.getElementById('startbtn').style = 'display: none;';
+    document.getElementById('volume').classList.remove('d-none');
 }
 

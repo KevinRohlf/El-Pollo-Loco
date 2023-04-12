@@ -10,7 +10,9 @@ class Keyboard {
         this.pressedBtnsEvents()
     }
 
-
+    /**
+     * this function listen if the buttons is touched
+     */
     pressedBtnsEvents() {
         setInterval(() => {
             document.getElementById('btnLeft').addEventListener('touchstart', (e) => {

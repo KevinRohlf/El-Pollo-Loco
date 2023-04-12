@@ -7,7 +7,7 @@ class ThrowableObject extends MovableObject {
     }
     deleted = false;
     speedX = 5;
-    bottle_sound = new Audio('../audio/glass.mp3'); 
+    bottle_sound = new Audio('./audio/glass.mp3'); 
 
     images_Hit = [
         'img/6_salsa_bottle/bottle_rotation/bottle_splash/1_bottle_splash.png',
@@ -36,6 +36,9 @@ class ThrowableObject extends MovableObject {
         this.animate();
     }
 
+    /**
+     * this function play the animation from the bottle
+     */
     animate() {
         setInterval(() => {
             if (this.isHurt() || !this.isAboveGround()) {
@@ -50,6 +53,10 @@ class ThrowableObject extends MovableObject {
         }, 100);
     }
 
+    /**
+     * this function throw the bottle
+     * @param {string} reverse 
+     */
     throw(reverse) {
         this.speedY = 30;
         this.applyGravity();

@@ -22,6 +22,10 @@ class Bottle extends MovableObject {
         this.y = 380;
     }
 
+    /**
+     * this function return random 0 or 1
+     * @returns 0 or 1
+     */
     randomBottle() {
         let i  = Math.random();
         if (i < 0.5){

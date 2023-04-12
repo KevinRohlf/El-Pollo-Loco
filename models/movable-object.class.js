@@ -7,15 +7,18 @@ class MovableObject extends DrawableObject {
     lastHit = 0;
     deleted = false;
     Interval = [];
+    world;
 
     offset = {
         top: 0,
         left: 0,
         right: 0,
         bottom: 0
-    }
+    };
 
-
+    /**
+     * this function apply gravity
+     */
     applyGravity() {
         setInterval(() => {
             if (this.isAboveGround() || this.speedY > 0) {
@@ -25,6 +28,10 @@ class MovableObject extends DrawableObject {
         }, 1000 / 25);
     }
 
+    /**
+     * this function checks if the moveable object is above ground
+     * @returns true or false
+     */
     isAboveGround() {
         if (this instanceof ThrowableObject || this instanceof Chicken) { // Throwable Objects should always fall
             return this.y < 350;
@@ -34,16 +41,28 @@ class MovableObject extends DrawableObject {
 
     }
 
+    /**
+     * this function create an interval to the array Interval
+     * @param {*} fn function 
+     * @param {*} time interval time
+     */
     setStopableInterval(fn, time) {
         let id = setInterval(fn, time);
         this.Interval.push(id);
     }
 
+    /**
+     * this function clear all intavals in the array interval
+     */
     clearIntervals() {
         this.Interval.forEach(clearInterval);
     }
 
-
+    /**
+     * this function checkt if colloding
+     * @param {object} mo object is colliding
+     * @returns 
+     */
     isColliding(mo) {
         return this.x + this.width - this.offset.right >= mo.x + mo.offset.left &&
             this.y + this.height - this.offset.bottom >= mo.y + mo.offset.top &&
@@ -51,6 +70,10 @@ class MovableObject extends DrawableObject {
             this.y + this.offset.top <= mo.y + mo.height - mo.offset.bottom;
     }
 
+    /**
+     * this function makes the object damage
+     * @param {int} value damage
+     */
     hit(value) {
         this.energy -= value;
         if (this.energy < 0) {
@@ -60,16 +83,28 @@ class MovableObject extends DrawableObject {
         }
     }
 
+    /**
+     * this function checks if the hit cooldown 1s is over
+     * @returns true or false
+     */
     isHurt() {
         let timePassed = new Date().getTime() - this.lastHit;
         timePassed = timePassed / 1000;
         return timePassed < 1;
     }
 
+    /**
+     * this function checks if the character erngy = 0
+     * @returns true or false
+     */
     isDead() {
         return this.energy == 0;
     }
 
+    /**
+     * this function play a animation from the image array
+     * @param {array} images 
+     */
     playAnimation(images) {
         let i = this.currentImage % images.length;
         let path = images[i];
@@ -77,6 +112,10 @@ class MovableObject extends DrawableObject {
         this.currentImage++;
     }
 
+    /**
+     * this function make the objekt move to right
+     * @param {int} speed 
+     */
     moveRight(speed) {
         if (speed) {
             this.speed = speed;
@@ -84,6 +123,10 @@ class MovableObject extends DrawableObject {
         this.x += this.speed;
     }
 
+    /**
+     * this function make the objekt move to left
+     * @param {int} speed 
+     */
     moveLeft(speed) {
         if (speed) {
             this.speed = speed;
@@ -91,6 +134,10 @@ class MovableObject extends DrawableObject {
         this.x -= this.speed;
     }
 
+    /**
+     * this function make the object jump
+     * @param {string} low  low or hight jump
+     */
     jump(low) {
         if (low) {
             this.speedY = 15;
@@ -100,6 +147,9 @@ class MovableObject extends DrawableObject {
 
     }
 
+    /**
+     * this function is the rush attack from the chickens
+     */
     rushAttack() {
         this.speed = 3;
         if (!this.isAboveGround()) {

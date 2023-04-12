@@ -26,12 +26,22 @@ class StatusBar extends DrawableObject {
       this.setPercentage(100, this.Images_Health);
    }
 
+   /**
+    * this function load the right statusbar image
+    * @param {int} percentage stat (energy, coins, bottles)
+    * @param {*} images Image Array
+    */
    setPercentage(percentage, images) {
       this.percentage = percentage;
       let path = images[this.resolveImageIndex(this.percentage)]
       this.img = this.imageCache[path];
    }
 
+   /**
+    * this Function returns the right statusbar Image number
+    * @param {int} stat the stat (how much coins,energy or bottles)
+    * @returns with image loading
+    */
    resolveImageIndex(stat) {
       if (stat >= 100) {
          return 5;

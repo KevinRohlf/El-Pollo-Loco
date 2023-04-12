@@ -11,6 +11,8 @@ class SmallChicken extends Chicken {
         bottom: 10
     };
 
+    chicken_sound = new Audio('./audio/chicken.mp3');
+
 
 
     images_Walking = [
@@ -27,5 +29,6 @@ class SmallChicken extends Chicken {
         this.x = 200 + Math.random() * 1500; // zahl zwischen 200 und 700
         this.speed = 0.15 + Math.random() * 0.25;
         this.animate();
+        this.chickenRun();
     }
 }

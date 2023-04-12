@@ -22,19 +22,36 @@ class World {
         this.lastThrowTime = new Date().getTime();
     }
 
+    /**
+     * this function set the world class to the characters & enemies
+     */
     setWorld() {
         this.character.world = this;
+        this.level.enemies.forEach(enemy => {
+            enemy.world = this;
+        });
     }
 
+    /**
+     * this function create an interval to the array Interval
+     * @param {*} fn function 
+     * @param {*} time interval time
+     */
     setStopableInterval(fn, time) {
         let id = setInterval(fn, time);
         this.Interval.push(id);
     }
 
+    /**
+     * this function clear all intavals in the array interval
+     */
     clearIntervals() {
         this.Interval.forEach(clearInterval);
     }
 
+    /**
+     * this function checked all collisions & other functions 
+     */
     run() {
         this.setStopableInterval(() => {
             this.checkCollisions();
@@ -47,12 +64,19 @@ class World {
         }, 1000 / 60);
     }
 
+    /**
+     * this function checks if the cooldown of 6 seconds is reached to throw another bottle
+     * @returns true or false
+     */
     lastThrow() {
         let timePassed = new Date().getTime() - this.lastThrowTime;
         timePassed = timePassed / 1000;
         return timePassed > 0.5;
     }
 
+    /**
+     * this function throw a bottle if the D key pressed
+     */
     checkThrowObjects() {
         if (this.keyboard.D == true && this.character.bottles > 0 && !this.gameOver) {
             if (this.character.otherDirection && this.lastThrow()) {
@@ -63,6 +87,10 @@ class World {
         }
     }
 
+    /**
+     * this function create the throwable bottles
+     * @param {string} direction direction of the throw
+     */
     throwBottle(direction) {
         let bottle;
         if (direction == 'right') {
@@ -77,6 +105,9 @@ class World {
         this.level.statusBarBottle.setPercentage(this.character.bottles, this.level.statusBarBottle.Images_Bottle)
     }
 
+    /**
+     * this function triggert the chicken rush attack
+     */
     chickenAttack() {
         this.level.enemies.forEach((enemy) => {
             if (enemy.x - this.character.x < 400 && enemy.energy > 0) {
@@ -85,6 +116,9 @@ class World {
         })
     }
 
+    /**
+     * this function delete the throwable bottles if they on ground 
+     */
     deleteThrowObject() {
         for (let i = 0; i < this.throwableObjects.length; i++) {
             if (!this.throwableObjects[i].isAboveGround() && !this.throwableObjects[i].deleted) {
@@ -94,18 +128,23 @@ class World {
                         this.throwableObjects.splice(i, 1)
                     }
                 }, 500);
-
-
             }
         }
     }
 
+    /**
+     * this function delete the dead enemies & play the sound if chicken dead
+     */
     enemyDead() {
         for (let i = 0; i < this.level.enemies.length; i++) {
             if (this.level.enemies[i].energy == 0 && !this.level.enemies[i].deleted) {
                 this.level.enemies[i].deleted = true;
+                if(this.audio) {
+                  this.level.enemies[i].chicken_sound.play();  
+                };
                 setTimeout(() => {
                     if (this.level.enemies[i].deleted) {
+                        this.level.enemies[i].chicken_sound.pause();
                         this.level.enemies.splice(i, 1)
                     }
                 }, 1000);
@@ -113,6 +152,9 @@ class World {
         }
     }
 
+    /**
+     * this function triggert the endbossfight
+     */
     endbossFight() {
         this.level.enemies.forEach(enemy => {
             if (enemy instanceof Endboss && this.character.x >= 1300 || enemy.activate) {
@@ -125,11 +167,17 @@ class World {
         });
     }
 
+    /**
+     * this function checks if the game over
+     */
     checkEnd() {
         this.checkIfCharacterDead();
         this.checkIfEndbossDead();
     }
 
+    /**
+     * this function checks if the endboss is dead
+     */
     checkIfEndbossDead() {
         this.level.enemies.forEach(enemy => {
             if (enemy instanceof Endboss && enemy.energy <= 0) {
@@ -143,6 +191,9 @@ class World {
         })
     }
 
+    /**
+     * this function checks if the charakter is dead
+     */
     checkIfCharacterDead() {
         if (this.character.energy <= 0) {
             setTimeout(() => {
@@ -155,7 +206,9 @@ class World {
         }
     }
 
-
+    /**
+     * this function checks the collisions
+     */
     checkCollisions() {
         if (!this.character.isHurt()) {
             this.level.enemies.forEach((enemy) => {
@@ -168,6 +221,9 @@ class World {
         this.collisionWithThrowableObject();
     }
 
+    /**
+     * this function checks the collision with throwable objects & play the bottle sound
+     */
     collisionWithThrowableObject() {
         this.throwableObjects.forEach(bottle => {
             this.level.enemies.forEach(e => {
@@ -191,28 +247,41 @@ class World {
         });
     }
 
+    /**
+     * this function check collision with bottle
+     */
     collisionWithBottle() {
         this.level.bottles.forEach((bottle) => {
             if (this.character.isColliding(bottle)) {
                 this.level.bottles.splice(bottle, 1)
                 this.character.bottles += 10;
-                console.log(this.character.bottles)
                 this.level.statusBarBottle.setPercentage(this.character.bottles, this.level.statusBarBottle.Images_Bottle)
             }
         })
     }
 
+    /**
+     * this function checks collision with coin
+     */
     collisionWithCoin() {
         for (let i = 0; i < this.level.coins.length; i++) {
             let coin = this.level.coins[i];
+            coin.coin_sound.pause()
             if (this.character.isColliding(coin)) {
                 this.level.coins.splice(i, 1)
                 this.character.coins += 10;
+                if(this.audio) {
+                    coin.coin_sound.play();
+                }
                 this.level.statusBarCoin.setPercentage(this.character.coins, this.level.statusBarCoin.Images_Coins)
             }
         }
     }
 
+    /**
+     * this function checks collision with enemy (chicken)
+     * @param {*} enemy the enemy 
+     */
     collisionWithChicken(enemy) {
         if (this.character.isColliding(enemy) && enemy.energy > 0 && !this.character.isAboveGround() && enemy instanceof Chicken) {
             this.character.hit(5);
@@ -224,6 +293,10 @@ class World {
         }
     }
 
+    /**
+     * this function checks collision with the endboss
+     * @param {*} enemy the endboss
+     */
     collisionWithEndboss(enemy) {
         if (this.character.isColliding(enemy) && enemy.energy > 0 && enemy instanceof Endboss) {
             this.character.hit(20);
@@ -231,11 +304,12 @@ class World {
         }
     }
 
+    /**
+     * this function draw all objects to canvas
+     */
     draw() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-
-        this.ctx.translate(this.camera_x, 0)
-
+        this.ctx.translate(this.camera_x, 0)        
         this.addObjectsToMap(this.level.backgroundObjects);
         this.addObjectsToMap(this.level.clouds);
         if (!this.gameOver) {
@@ -254,9 +328,7 @@ class World {
             if (this.endFight) {
                 this.addToMap(this.level.statusBarEndboss);
             }
-
         }
-
         // draw() wird immer wieder aufgerufen
         self = this;
         requestAnimationFrame(function () {
@@ -264,12 +336,20 @@ class World {
         });
     }
 
+    /**
+     * this function gives a picture from a array to the addtomap function 
+     * @param {array} objects array with pictures
+     */
     addObjectsToMap(objects) {
         objects.forEach(o => {
             this.addToMap(o);
         });
     }
 
+    /**
+     * this function draw a picture to canvas
+     * @param {*} mo obejct picture 
+     */
     addToMap(mo) {
         if (mo.otherDirection) {
             this.flipImage(mo);
@@ -282,6 +362,10 @@ class World {
         }
     }
 
+    /**
+     * this function flip an image to the other side
+     * @param {*} mo picture
+     */
     flipImage(mo) {
         this.ctx.save();
         this.ctx.translate(mo.width, 0);
@@ -289,6 +373,10 @@ class World {
         mo.x = mo.x * -1;
     }
 
+    /**
+     * this function flip the image back
+     * @param {*} mo picture
+     */
     flipImageBack(mo) {
         mo.x = mo.x * -1
         this.ctx.restore();

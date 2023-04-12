@@ -42,6 +42,7 @@ class Endboss extends MovableObject {
         'img/4_enemie_boss_chicken/5_dead/G26.png'
     ];
 
+    chicken_sound = new Audio('./audio/chicken.mp3');
 
     constructor() {
         super().loadImage(this.images_Idle[0]);
@@ -54,6 +55,10 @@ class Endboss extends MovableObject {
 
     }
 
+    /**
+     * this function let the endboss run
+     * @param {*} character the character class
+     */
     run(character) {
         if (this.x > character.x) {
             this.moveLeft(4)
@@ -64,14 +69,13 @@ class Endboss extends MovableObject {
         }
     }
 
+    /**
+     * this function play the animation from the endboss
+     */
     animate() {
-
         this.setStopableInterval(() => {
             if (this.energy <= 0) {
                 this.playAnimation(this.images_IsDead);
-                setTimeout(() => {
-                    this.x = -20000;
-                }, 1000);
             }else if (this.activate && !this.isHurt()) {
                 this.playAnimation(this.images_Walking);
             }else if (this.isHurt()) {

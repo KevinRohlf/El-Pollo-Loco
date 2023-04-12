@@ -13,6 +13,8 @@ class Coin extends MovableObject {
         bottom: 50
     }
 
+    coin_sound = new Audio('./audio/coin.mp3')
+
 
     constructor(x) {
         super().loadImage(this.Image_Coin[1]);
@@ -22,6 +24,9 @@ class Coin extends MovableObject {
         this.animate();
     }
 
+    /**
+     * this function play the animaton from the coin
+     */
     animate() {
         this.setStopableInterval(() => {
             this.playAnimation(this.Image_Coin)

@@ -10,6 +10,9 @@ function init() {
     world = new World(canvas, keyboard);
 }
 
+/**
+ * this function is the key listener to check witch key pressed
+ */
 window.addEventListener("keydown", (e) => {
     if(e.keyCode == 37) {
         keyboard.LEFT = true;
@@ -36,6 +39,9 @@ window.addEventListener("keydown", (e) => {
     }     
 })
 
+/**
+ * this function checks if the key go up
+ */
 window.addEventListener("keyup", (e) => {
     if(e.keyCode == 37) {
         keyboard.LEFT = false;
@@ -62,14 +68,23 @@ window.addEventListener("keyup", (e) => {
     }  
 })
 
+/**
+ * this function size the game to fullscreen
+ */
 function fullscreen() {
     document.getElementById('content').requestFullscreen();
 }
 
+/**
+ * this function restart the game
+ */
 function restart() {
     window.location.reload();
 }
 
+/**
+ * this function open the controls
+ */
 function openSettings() {
     let btn = document.getElementById('settingsBtn');
     btn.setAttribute('onclick', 'closeSettings()');
@@ -77,6 +92,9 @@ function openSettings() {
     document.getElementById('settings').classList.remove('d-none');
 }
 
+/**
+ * this function close the controls
+ */
 function closeSettings() {
     let btn = document.getElementById('settingsBtn');
     btn.setAttribute('onclick', 'openSettings()');
@@ -84,6 +102,9 @@ function closeSettings() {
     document.getElementById('settings').classList.add('d-none');
 }
 
+/**
+ * this function mute the game audio
+ */
 function volumeMute() {
     world.audio = false;
     let volume = document.getElementById('volume');
@@ -91,6 +112,9 @@ function volumeMute() {
     volume.setAttribute('onclick', 'volumeUp()');
 }
 
+/**
+ * this function turn the audio on
+ */
 function volumeUp() {
     world.audio = true;
     let volume = document.getElementById('volume');

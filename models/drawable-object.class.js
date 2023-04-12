@@ -8,15 +8,26 @@ class DrawableObject {
     currentImage = 0;
     hitboxrender = false;
 
+    /**
+     * this function load the image
+     */
     loadImage(path) {
         this.img = new Image();
         this.img.src = path;
     }
 
+    /**
+     * this function draw
+     * @param {*} ctx  canvas context
+     */
     draw(ctx) {
         ctx.drawImage(this.img, this.x, this.y, this.width, this.height)
     }
 
+    /**
+     * this function load all images from the array in the cache
+     * @param {array} arr 
+     */
     loadImages(arr) {
         arr.forEach((path) => {
             let img = new Image();
@@ -24,7 +35,11 @@ class DrawableObject {
             this.imageCache[path] = img;
         });
     }
-
+    
+    /**
+     * this function draw the hitbox frame
+     * @param {*} ctx canvas context
+     */
     drawFrame(ctx) {
         if(this.hitboxrender) {
            if (this instanceof Character || this instanceof Chicken || this instanceof Endboss || this instanceof Coin || this instanceof ThrowableObject || this instanceof Bottle) {

@@ -73,8 +73,8 @@ class Character extends MovableObject {
         'img/2_character_pepe/4_hurt/H-42.png',
         'img/2_character_pepe/4_hurt/H-43.png'
     ]
-    walking_sound = new Audio('../audio/running.mp3');
-    jump_sound = new Audio('../audio/jump.mp3');
+    walking_sound = new Audio('./audio/running.mp3');
+    jump_sound = new Audio('./audio/jump.mp3');
 
     world;
     lastMoveTime;
@@ -91,42 +91,68 @@ class Character extends MovableObject {
         this.loadImages(this.images_Hurt);
         this.applyGravity();
         this.animate();
+        this.move();
     }
 
-    animate() {
+
+    /**
+     * this function let the character move
+     */
+    move() {
         this.setStopableInterval(() => {
             this.walking_sound.pause();
-            
-            if (this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x) {
-                this.moveRight();
-                this.otherDirection = false;
-                this.setLastMoveTime()
-                if(this.world.audio) {
-                    this.walking_sound.play();
-                }
-            }
-
-            if (this.world.keyboard.LEFT && this.x > 0) {
-                this.moveLeft()
-                this.otherDirection = true;
-                this.setLastMoveTime()
-                if(this.world.audio) {
-                    this.walking_sound.play();
-                }
-            }
-
-            if (this.world.keyboard.SPACE && !this.isAboveGround()) {
-                this.jump();
-                this.setLastMoveTime();
-                if(this.world.audio) {
-                    this.jump_sound.play();
-                }
-            }
-
-
+            this.moveToRight();
+            this.moveToLeft();
+            this.characterJump();
             this.world.camera_x = -this.x + 100;
         }, 1000 / 60);
+    }
 
+    /**
+     * this function let the character move right
+     */
+    moveToRight() {
+        if (this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x) {
+            this.moveRight();
+            this.otherDirection = false;
+            this.setLastMoveTime()
+            if(this.world.audio) {
+                this.walking_sound.play();
+            }
+        }
+    }
+
+    /**
+     * this function let the character move left 
+     */
+    moveToLeft() {
+        if (this.world.keyboard.LEFT && this.x > 0) {
+            this.moveLeft()
+            this.otherDirection = true;
+            this.setLastMoveTime()
+            if(this.world.audio) {
+                this.walking_sound.play();
+            }
+        }
+    }
+
+    /**
+     * this function let the character jump
+     */
+    characterJump() {
+        if (this.world.keyboard.SPACE && !this.isAboveGround()) {
+            this.jump();
+            this.setLastMoveTime();
+            if(this.world.audio) {
+                this.jump_sound.play();
+            }
+        }
+    }
+
+    /**
+     * this function play the character animations
+     */
+    animate() {
         this.setStopableInterval(() => {
             if (this.isDead()) {
                 this.playAnimation(this.images_Dead);
@@ -145,10 +171,17 @@ class Character extends MovableObject {
         }, 100)
     }
 
+    /**
+     * this function set the last move time
+     */
     setLastMoveTime() {
         this.lastMoveTime = new Date().getTime();
     }
 
+    /**
+     * this function checks if the last move time > 6s
+     * @returns true or false
+     */
     checkIdleTime() {
         let idleTime = new Date().getTime() - this.lastMoveTime;
         idleTime = idleTime / 1000;
