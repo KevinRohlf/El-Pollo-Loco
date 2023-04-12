@@ -56,10 +56,10 @@ class Endboss extends MovableObject {
 
     run(character) {
         if (this.x > character.x) {
-            this.moveLeft(6)
+            this.moveLeft(4)
             this.otherDirection = false;
-        } else if (this.x < character.x) {
-            this.moveRight(6)
+        } else {
+            this.moveRight(4)
             this.otherDirection = true;
         }
     }

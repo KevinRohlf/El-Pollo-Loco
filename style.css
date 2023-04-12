@@ -69,8 +69,36 @@ body {
     border-radius: 20px;
     display: flex;
     justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 10px;
     padding: 20px;
     z-index: 2;
+}
+
+.keySettings img {
+    width: 64px;
+    height: 64px;
+}
+
+.d-flex-center {
+    display: flex;
+    width: 100%;
+    justify-content: space-around;
+    align-items: center;
+    gap: 10px;
+    font-size: 20px;
+    border-bottom: #b1b1b1 1px solid;
+}
+
+.d-flex-center h2 {
+    letter-spacing: 5px;
+}
+
+.dkey {
+    width: 32px !important;
+    height: 32px !important;
+    
 }
 
 #startbtn,

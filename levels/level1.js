@@ -40,6 +40,7 @@ function start() {
     let statusBar = new StatusBar();
     let statusBarCoin = new StatusBarCoin();
     let statusBarBottle = new StatusBarBottle();
+    let statusBarEndboss = new StatusBarEndBoss();
 
     for (let i = 1 ;i < 15 ; i++) {
         coins.push(new Coin(i * 100),)
@@ -48,7 +49,7 @@ function start() {
         bottles.push(new Bottle(i * 100),)
     }
 
-    level1 = new Level(enemys, clouds, background, coins, bottles, statusBar, statusBarCoin, statusBarBottle);
+    level1 = new Level(enemys, clouds, background, coins, bottles, statusBar, statusBarCoin, statusBarBottle, statusBarEndboss);
 
     document.getElementById('startscreen').style = 'display: none;';
     document.getElementById('startbtn').style = 'display: none;';

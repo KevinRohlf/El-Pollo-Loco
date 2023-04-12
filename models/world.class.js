@@ -9,6 +9,7 @@ class World {
     lastThrowTime;
     Interval = [];
     gameOver = false;
+    endFight = false;
 
     constructor(canvas, keyboard) {
         this.ctx = canvas.getContext('2d');
@@ -106,8 +107,11 @@ class World {
 
     endbossFight() {
         this.level.enemies.forEach(enemy => {
-            if (enemy instanceof Endboss && this.character.x >= 1300 || enemy.activate && enemy.energy > 0 && !enemy.isHurt()) {
-                enemy.run(this.character)
+            if (enemy instanceof Endboss && this.character.x >= 1300 || enemy.activate) {
+                if (enemy.energy > 0 && !enemy.isHurt()){
+                    enemy.run(this.character)
+                }
+                this.endFight = true;
                 enemy.activate = true;
             }
         });
@@ -139,7 +143,7 @@ class World {
                 this.gameOver = true;
                 document.getElementById('restartBtn').classList.remove('d-none');
                 document.getElementById('lost').classList.remove('d-none');
-            }, 1000);
+            }, 500);
         }
     }
 
@@ -162,6 +166,9 @@ class World {
                 if (e.isColliding(bottle) && bottle.energy > 0) {
                     e.hit(100);
                     bottle.hit(100);
+                };
+                if (e instanceof Endboss) {
+                    this.level.statusBarEndboss.setPercentage(e.energy / 4.5, this.level.statusBarEndboss.Images_Health)
                 }
             });
         });
@@ -227,6 +234,10 @@ class World {
             this.addToMap(this.level.statusBar);
             this.addToMap(this.level.statusBarCoin);
             this.addToMap(this.level.statusBarBottle);
+            if(this.endFight){
+                this.addToMap(this.level.statusBarEndboss);  
+            }
+            
         }
 
         // draw() wird immer wieder aufgerufen

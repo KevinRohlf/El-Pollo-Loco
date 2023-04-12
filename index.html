@@ -5,12 +5,14 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>El Pollo Loco</title>
+    <link rel="shortcut icon" href="./img/3_enemies_chicken/chicken_normal/1_walk/3_w.png" type="image/x-icon">
     <link rel="stylesheet" href="style.css">
     <script src="./models/drawable-object.class.js"></script>
     <script src="./models/status-bar.class.js"></script>
     <script src="./models/status-bar-coin.class.js"></script>
     <script src="./models/status-bar-bottle.class.js"></script>
+    <script src="./models/status-bar-endboss.class.js"></script>
     <script src="./models/movable-object.class.js"></script>
     <script src="./models/character.class.js"></script>
     <script src="./models/chicken.class.js"></script>
@@ -39,8 +41,10 @@
             <img class="d-none" id="lost" src="img\9_intro_outro_screens\game_over\oh no you lost!.png" alt="lost">
             <div id="settings" class="d-none">
                 <div class="keySettings">
-                    D = Throw
-
+                    <div class="d-flex-center"><h2>Controls</h2></div>
+                    <div class="d-flex-center"><img src="./img/hud/arrowkeys.svg" alt="arrowkeys">=<span>Move</span></div>
+                    <div class="d-flex-center"><img class="dkey" src="./img/hud/dkey.svg" alt="DKey">=<span>Throw Bottle</span></div>
+                    <div class="d-flex-center"><img class="dkey" src="./img/hud/space.svg" alt="DKey">=<span>Jump</span></div>
                 </div>
             </div>
         </div>
