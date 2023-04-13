@@ -54,8 +54,7 @@ function start() {
 
     level1 = new Level(enemys, clouds, background, coins, bottles, statusBar, statusBarCoin, statusBarBottle, statusBarEndboss);
 
-    document.getElementById('startscreen').style = 'display: none;';
-    document.getElementById('startbtn').style = 'display: none;';
+    document.getElementById('startscreen').classList.add('d-none');
     document.getElementById('volume').classList.remove('d-none');
 }
 

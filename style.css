@@ -16,6 +16,11 @@ body {
     background: #fff url('img/desert-5112222.svg') center center/cover no-repeat;
 }
 
+
+button {
+    color: black;
+}
+
 .d-none {
     display: none !important;
 }
@@ -43,9 +48,9 @@ body {
     transition: all ease-in-out 175ms;
 }
 
-#startscreen,
-#gameOver,
-#lost,
+#startscreen img,
+#gameOver img,
+#lost img,
 #settings {
     display: flex;
     align-items: center;
@@ -121,6 +126,10 @@ body {
     font-size: 24px;
 }
 
+.turn {
+    display: none;
+}
+
 h1 {
     font-size: 4rem;
     letter-spacing: 2px;
@@ -158,20 +167,27 @@ canvas {
     canvas {
         width: 100%;
     }
-
-    .hud {
+    
+    .turn {
         position: absolute;
+        top: 0;
+        bottom: 0;
         right: 0;
         left: 0;
-        bottom: 10svh;
         display: flex;
-        justify-content: space-around;
+        justify-content: center;
+        align-items: center;
+        letter-spacing: 2px;
+        font-size: 2rem;
+        height: 100svh;
+        width: 100%;
+        background-color: rgba(0, 0, 0, 0.8);
+        z-index: 1;
+        color: #fff;
     }
-    .btns button {
-        width: 70px;
-        height: 70px;
-        border-radius: 100%;
-    }
+
+    
+    
 
     #startbtn,
     #restartBtn {
@@ -200,7 +216,11 @@ canvas {
         top: 30px
     }
     
-    .fullscreen {
+    .fullscreen img:nth-child(2){
+        display: none;
+    }
+
+    .turn {
         display: none;
     }
 
@@ -214,8 +234,15 @@ canvas {
     }
 
     .btns button {
-        width: 70px;
-        height: 70px;
-        border-radius: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 50px;
+        height: 50px;
+        border-radius: 100%; 
+    }
+
+    .btns button img {
+        width: 32px;
     }
 }

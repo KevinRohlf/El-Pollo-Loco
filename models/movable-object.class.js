@@ -6,7 +6,7 @@ class MovableObject extends DrawableObject {
     energy = 100;
     lastHit = 0;
     deleted = false;
-    Interval = [];
+    Intervals = [];
     world;
 
     offset = {
@@ -48,14 +48,14 @@ class MovableObject extends DrawableObject {
      */
     setStopableInterval(fn, time) {
         let id = setInterval(fn, time);
-        this.Interval.push(id);
+        this.Intervals.push(id);
     }
 
     /**
      * this function clear all intavals in the array interval
      */
     clearIntervals() {
-        this.Interval.forEach(clearInterval);
+        this.Intervals.forEach(clearInterval);
     }
 
     /**
@@ -90,7 +90,7 @@ class MovableObject extends DrawableObject {
     isHurt() {
         let timePassed = new Date().getTime() - this.lastHit;
         timePassed = timePassed / 1000;
-        return timePassed < 1;
+        return timePassed < 0.5;
     }
 
     /**

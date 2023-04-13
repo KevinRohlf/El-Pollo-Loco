@@ -32,8 +32,4 @@ class Coin extends MovableObject {
             this.playAnimation(this.Image_Coin)
         }, 300);
     }
-
-    randomXY() {
-        
-    }
 }

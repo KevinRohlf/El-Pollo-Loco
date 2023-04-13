@@ -7,10 +7,12 @@ class World {
     camera_x = 0;
     throwableObjects = [];
     lastThrowTime;
-    Interval = [];
+    Intervals = [];
+    allIntervals = []
     gameOver = false;
     endFight = false;
     audio = true;
+
 
     constructor(canvas, keyboard) {
         this.ctx = canvas.getContext('2d');
@@ -21,6 +23,7 @@ class World {
         this.run();
         this.lastThrowTime = new Date().getTime();
     }
+
 
     /**
      * this function set the world class to the characters & enemies
@@ -39,14 +42,16 @@ class World {
      */
     setStopableInterval(fn, time) {
         let id = setInterval(fn, time);
-        this.Interval.push(id);
+        this.Intervals.push(id);
     }
 
     /**
      * this function clear all intavals in the array interval
      */
     clearIntervals() {
-        this.Interval.forEach(clearInterval);
+        this.Intervals.forEach(clearInterval);
+        this.character.clearIntervals();
+        // this.clearAllIntervals()
     }
 
     /**
@@ -78,7 +83,7 @@ class World {
      * this function throw a bottle if the D key pressed
      */
     checkThrowObjects() {
-        if (this.keyboard.D == true && this.character.bottles > 0 && !this.gameOver) {
+        if (this.keyboard.D == true && this.character.bottles > 0 && this.character.energy > 0&& !this.gameOver) {
             if (this.character.otherDirection && this.lastThrow()) {
                 this.throwBottle('left')
             } else if (this.lastThrow()) {
@@ -121,13 +126,14 @@ class World {
      */
     deleteThrowObject() {
         for (let i = 0; i < this.throwableObjects.length; i++) {
-            if (!this.throwableObjects[i].isAboveGround() && !this.throwableObjects[i].deleted) {
+            if (this.throwableObjects[i].energy == 0 && !this.throwableObjects[i].deleted || !this.throwableObjects[i].isAboveGround() && !this.throwableObjects[i].deleted) {
                 this.throwableObjects[i].deleted = true;
                 setTimeout(() => {
                     if (this.throwableObjects[i].deleted) {
+                        this.throwableObjects[i].clearIntervals()
                         this.throwableObjects.splice(i, 1)
                     }
-                }, 500);
+                }, 200);
             }
         }
     }
@@ -139,11 +145,12 @@ class World {
         for (let i = 0; i < this.level.enemies.length; i++) {
             if (this.level.enemies[i].energy == 0 && !this.level.enemies[i].deleted) {
                 this.level.enemies[i].deleted = true;
-                if(this.audio) {
-                  this.level.enemies[i].chicken_sound.play();  
+                if (this.audio) {
+                    this.level.enemies[i].chicken_sound.play();
                 };
                 setTimeout(() => {
                     if (this.level.enemies[i].deleted) {
+                        this.level.enemies[i].clearIntervals();
                         this.level.enemies[i].chicken_sound.pause();
                         this.level.enemies.splice(i, 1)
                     }
@@ -180,12 +187,12 @@ class World {
      */
     checkIfEndbossDead() {
         this.level.enemies.forEach(enemy => {
-            if (enemy instanceof Endboss && enemy.energy <= 0) {
+            if (enemy instanceof Endboss && enemy.energy <= 0 && !this.gameOver && !this.character.energy == 0) {
                 setTimeout(() => {
-                    this.character.clearIntervals();
                     this.gameOver = true;
-                    document.getElementById('restartBtn').classList.remove('d-none');
                     document.getElementById('gameOver').classList.remove('d-none');
+                    this.clearIntervals();
+                    this.character.walking_sound.pause();
                 }, 1000);
             }
         })
@@ -195,13 +202,12 @@ class World {
      * this function checks if the charakter is dead
      */
     checkIfCharacterDead() {
-        if (this.character.energy <= 0) {
+        if (this.character.energy <= 0 && !this.gameOver) {
             setTimeout(() => {
-                this.character.clearIntervals();
-                this.level = level2;
                 this.gameOver = true;
-                document.getElementById('restartBtn').classList.remove('d-none');
                 document.getElementById('lost').classList.remove('d-none');
+                this.clearIntervals();
+                this.character.walking_sound.pause();
             }, 500);
         }
     }
@@ -227,37 +233,63 @@ class World {
     collisionWithThrowableObject() {
         this.throwableObjects.forEach(bottle => {
             this.level.enemies.forEach(e => {
-                if (e.isColliding(bottle) && bottle.energy > 0 && bottle.isAboveGround()) {
-                    e.hit(100);
-                    bottle.hit(100);
-                    if(this.audio) {
-                        bottle.bottle_sound.play();  
-                    }                   
-                };
-                if(!bottle.isAboveGround() && bottle.energy > 0 ) {
-                    bottle.speedX = 0;
-                    if(this.audio) {
-                        bottle.bottle_sound.play();  
-                    }   
-                }
-                if (e instanceof Endboss) {
-                    this.level.statusBarEndboss.setPercentage(e.energy / 4.5, this.level.statusBarEndboss.Images_Health)
-                }
+                this.bottleHitsEnemy(e, bottle);
+                this.bottleHitsGround(bottle);
+                this.bottleHitsEndboss(e)
             });
         });
+    }
+
+    /**
+     * this function checks if the bottle hits the enemy
+     * @param {*} e the enemy object
+     * @param {*} bottle the bottle object
+     */
+    bottleHitsEnemy(e, bottle) {
+        if (e.isColliding(bottle) && bottle.energy > 0 && bottle.isAboveGround()) {
+            e.hit(100);
+            bottle.hit(100);
+            if (this.audio) {
+                bottle.bottle_sound.play();
+            }
+        };
+    }
+
+    /**
+     * this function checks if bottle hits the ground
+     * @param {*} bottle the bottle object
+     */
+    bottleHitsGround(bottle) {
+        if (!bottle.isAboveGround()) {
+            bottle.speedX = 0;
+            if (this.audio && bottle.energy > 0) {
+                bottle.bottle_sound.play();
+            }
+        }
+    }
+
+    /**
+     * this function checks if enemy is endboss and control the statusbar
+     * @param {*} e enemy
+     */
+    bottleHitsEndboss(e) {
+        if (e instanceof Endboss) {
+            this.level.statusBarEndboss.setPercentage(e.energy / 4.5, this.level.statusBarEndboss.Images_Health)
+        }
     }
 
     /**
      * this function check collision with bottle
      */
     collisionWithBottle() {
-        this.level.bottles.forEach((bottle) => {
+        for (let i = 0; i < this.level.bottles.length; i++) {
+            let bottle = this.level.bottles[i];
             if (this.character.isColliding(bottle)) {
-                this.level.bottles.splice(bottle, 1)
+                this.level.bottles.splice(i, 1)
                 this.character.bottles += 10;
-                this.level.statusBarBottle.setPercentage(this.character.bottles, this.level.statusBarBottle.Images_Bottle)
+                this.level.statusBarBottle.setPercentage(this.character.bottles, this.level.statusBarBottle.Images_Bottle);
             }
-        })
+        }
     }
 
     /**
@@ -268,9 +300,10 @@ class World {
             let coin = this.level.coins[i];
             coin.coin_sound.pause()
             if (this.character.isColliding(coin)) {
+                coin.clearIntervals();
                 this.level.coins.splice(i, 1)
                 this.character.coins += 10;
-                if(this.audio) {
+                if (this.audio) {
                     coin.coin_sound.play();
                 }
                 this.level.statusBarCoin.setPercentage(this.character.coins, this.level.statusBarCoin.Images_Coins)
@@ -309,7 +342,7 @@ class World {
      */
     draw() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        this.ctx.translate(this.camera_x, 0)        
+        this.ctx.translate(this.camera_x, 0)
         this.addObjectsToMap(this.level.backgroundObjects);
         this.addObjectsToMap(this.level.clouds);
         if (!this.gameOver) {

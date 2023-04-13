@@ -12,6 +12,9 @@ class Endboss extends MovableObject {
         right: 50,
         bottom: 10
     };
+
+    right = false;
+    
     
 
     images_Walking = [
@@ -60,12 +63,18 @@ class Endboss extends MovableObject {
      * @param {*} character the character class
      */
     run(character) {
-        if (this.x > character.x) {
+        if (this.x > (character.x - 300) && !this.right) {
             this.moveLeft(4)
             this.otherDirection = false;
-        } else {
+            if(this.x <= (character.x - 100)) {
+                this.right = true;
+            }
+        } else if (this.x < (character.x + 300) && this.right) {
             this.moveRight(4)
             this.otherDirection = true;
+            if(this.x >= character.x) {
+                this.right = false;
+            }
         }
     }
 
